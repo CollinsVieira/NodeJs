@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Asesor {
+  id        Int      @id @default(autoincrement())
+  username  String
+  password  String
+  nombre    String
+  apellido  String
+  email     String   @unique
+  celular   String
+  estado    String   @default("Activo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones - Un asesor puede registrar muchos estudiantes y estar a cargo de muchas clases
+  estudiante Student[]
+  clase      Clase[]
+}
+
+model Student {
+  id             Int      @id @default(autoincrement())
+  username       String
+  password       String
+  nombre         String
+  apellido       String
+  email          String   @unique
+  gradoAcademico String
+  dni            String   @unique
+  celular        String
+  estado         String   @default("Activo")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  //Relaciones - Un estudiante puede inscribirse a muchas clases
+  clase    Clase[]
+  asesor   Asesor? @relation(fields: [asesorId], references: [id])
+  asesorId Int?
+}
+
+model Teacher {
+  id        Int      @id @default(autoincrement())
+  username  String
+  password  String
+  nombre    String
+  apellido  String
+  email     String   @unique
+  dni       String   @unique
+  celular   String
+  estado    String   @default("Activo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relaciones - Un docente dicta muchas clases
+  clase Clase[]
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  precio      String
+  estado      String   @default("Activo")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //Relaciones - Un curso tiene muchas clases
+  clase       Clase[]
+}
+
+model Clase {
+  id          Int      @id @default(autoincrement())
+  fechaInicio DateTime
+  fechaFin    DateTime
+  horario     String
+  estado      String   @default("Activo")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  //Relaciones
+  course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  Int?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacherId Int?
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+  asesor    Asesor?  @relation(fields: [asesorId], references: [id])
+  asesorId  Int?
+}
