@@ -13,10 +13,22 @@ datasource db {
   provider = "postgresql"
 }
 
-model Asesor {
+model User {
   id        Int      @id @default(autoincrement())
   username  String
   password  String
+  role      String   @default("USER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones 1:1
+  asesor  Asesor?
+  teacher Teacher?
+  student Student?
+}
+
+model Asesor {
+  id        Int      @id @default(autoincrement())
   nombre    String
   apellido  String
   email     String   @unique
@@ -28,12 +40,13 @@ model Asesor {
   // Relaciones - Un asesor puede registrar muchos estudiantes y estar a cargo de muchas clases
   estudiante Student[]
   clase      Clase[]
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Student {
   id             Int      @id @default(autoincrement())
-  username       String
-  password       String
   nombre         String
   apellido       String
   email          String   @unique
@@ -48,12 +61,13 @@ model Student {
   clase    Clase[]
   asesor   Asesor? @relation(fields: [asesorId], references: [id])
   asesorId Int?
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Teacher {
   id        Int      @id @default(autoincrement())
-  username  String
-  password  String
   nombre    String
   apellido  String
   email     String   @unique
@@ -65,6 +79,9 @@ model Teacher {
 
   //Relaciones - Un docente dicta muchas clases
   clase Clase[]
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Course {
