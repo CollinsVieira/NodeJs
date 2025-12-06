@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  username  String
+  username  String   @unique
   password  String
   role      String   @default("USER")
   createdAt DateTime @default(now())
@@ -98,6 +98,7 @@ model Course {
 
 model Clase {
   id          Int      @id @default(autoincrement())
+  nombreClase String
   fechaInicio DateTime
   fechaFin    DateTime
   horario     String

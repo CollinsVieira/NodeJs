@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { authMiddleware, requireRole } from "../middleware/authMiddleware";
+import { Role } from "../utils/enum";
 import {
   getAllAsesor,
   getAsesorById,
@@ -8,8 +10,8 @@ import {
 } from "../services/asesorService";
 const router = Router();
 
-router.get("/", (_req, res) => {
-  getAllAsesor(_req, res);
+router.get("/", authMiddleware, requireRole(Role.ASESOR), (req, res) => {
+  getAllAsesor(req, res);
 });
 router.get("/:id", (req, res) => {
   getAsesorById(req, res);

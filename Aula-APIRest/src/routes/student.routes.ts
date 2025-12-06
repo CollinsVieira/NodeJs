@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { authMiddleware, requireRole } from "../middleware/authMiddleware";
+import { Role } from "../utils/enum";
 import {
   getAllStudent,
   getStudentById,
@@ -8,19 +10,19 @@ import {
 } from "../services/studentService";
 const router = Router();
 
-router.get("/", (_req, res) => {
+router.get("/", authMiddleware, (_req, res) => {
   getAllStudent(_req, res);
 });
-router.get("/:id", (req, res) => {
+router.get("/:id", authMiddleware, (req, res) => {
   getStudentById(req, res);
 });
-router.post("/", (req, res) => {
+router.post("/", authMiddleware, requireRole(Role.ASESOR), (req, res) => {
   createStudent(req, res);
 });
-router.put("/:id", (req, res) => {
+router.put("/:id", authMiddleware, requireRole(Role.ASESOR), (req, res) => {
   editStudent(req, res);
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authMiddleware, requireRole(Role.ASESOR), (req, res) => {
   deleteStudent(req, res);
 });
 

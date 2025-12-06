@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createUser } from "../services/authService";
+import { createUser, login } from "../services/authService";
 const router = Router();
 
-router.post("/login", (_req, res) => {
-  res.json({ message: "Login" });
+router.post("/login", (req, res) => {
+  login(req, res);
 });
 
 router.post("/register", (req, res) => {

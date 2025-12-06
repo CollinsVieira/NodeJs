@@ -1,12 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import apiRouter from "./server";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-const PORT = process.env.SERVER_PORT || 3000;
+app.use(cookieParser());
+const PORT = process.env.SERVER_PORT;
 
 app.get("/", (req, res) => {
   res.send(
