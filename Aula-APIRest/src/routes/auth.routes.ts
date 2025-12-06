@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getAllUser, getUserById } from "../services/authService";
+import { createUser } from "../services/authService";
 const router = Router();
 
 router.post("/login", (_req, res) => {
@@ -8,14 +8,6 @@ router.post("/login", (_req, res) => {
 
 router.post("/register", (req, res) => {
   createUser(req, res);
-});
-
-router.get("/", (req, res) => {
-  getAllUser(req, res);
-});
-
-router.get("/:id", (req, res) => {
-  getUserById(req, res);
 });
 
 router.post("/logout", (_req, res) => {
